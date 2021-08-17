@@ -52,11 +52,11 @@ public class EmployeeRestController {
             return Response.status(Response.Status.BAD_REQUEST).entity(validationMessages).build();
         }
 
-        if(employee != null){
+        if(e == null){
             EmployeeDao.updateEmployee(employee.getId(), employee);
             return Response.created(new URI("/employees/" + employee.getId())).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.CONFLICT).build();
         }
     }
 
