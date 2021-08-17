@@ -1,5 +1,6 @@
 package runner;
 
+import controller.EmployeeRestController;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
@@ -11,6 +12,8 @@ public class App extends Application<Configuration> {
 
     @Override
     public void run(Configuration configuration, Environment environment) throws Exception {
+        LOGGER.info("Registering REST controller.");
+        environment.jersey().register(new EmployeeRestController(environment.getValidator()));
     }
 
     public static void main(String[] args) throws Exception {
