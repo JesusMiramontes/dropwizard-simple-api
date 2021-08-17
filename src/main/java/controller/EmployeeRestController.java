@@ -60,4 +60,36 @@ public class EmployeeRestController {
         }
     }
 
+    @PUT
+    @Path("/{id}")
+    public Response updateEmployee(@PathParam("id") Integer id, Employee employee){
+        // validation
+        Set<ConstraintViolation<Employee>> violations = validator.validate(employee);
+        Employee e = EmployeeDao.getEmployee(employee.getId());
+        if (violations.size() > 0) {
+            ArrayList<String> validationMessages = new ArrayList<String>();
+            for (ConstraintViolation<Employee> violation : violations) {
+                validationMessages.add(violation.getPropertyPath().toString() + ": " + violation.getMessage());
+            }
+            return Response.status(Response.Status.BAD_REQUEST).entity(validationMessages).build();
+        }
+        if (e != null) {
+            employee.setId(id);
+            EmployeeDao.updateEmployee(id, employee);
+            return Response.ok(employee).build();
+        } else
+            return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteEmployeeById(@PathParam("id") Integer id){
+        Employee employee = EmployeeDao.getEmployee(id);
+        if(employee != null){
+            EmployeeDao.removeEmployee(id);
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
 }
